@@ -23,44 +23,48 @@
   <a id="enviar" class="btn" href="#" target="_blank">Enviar por WhatsApp</a>
 
   <script>
-    function getParam(name) {
+    function getCarritoFromURL() {
       const params = new URLSearchParams(window.location.search);
-      return decodeURIComponent(params.get(name) || '');
+      const raw = params.get("carrito");
+      try {
+        const decoded = decodeURIComponent(raw);
+        return JSON.parse(decoded);
+      } catch (e) {
+        console.error("Error al leer el carrito:", e);
+        return [];
+      }
     }
 
     const resumenDiv = document.getElementById("resumen");
     const totalSpan = document.getElementById("total");
     const enviarBtn = document.getElementById("enviar");
 
-    const carritoJSON = getParam("carrito");
-    let carrito = [];
-    try {
-      carrito = JSON.parse(carritoJSON);
-    } catch (e) {
-      resumenDiv.innerHTML = "<p>Carrito vacío o inválido.</p>";
+    const carrito = getCarritoFromURL();
+    if (!carrito.length) {
+      resumenDiv.innerHTML = "<p>No se encontraron productos en el carrito.</p>";
+      enviarBtn.style.display = "none";
+    } else {
+      let total = 0;
+      carrito.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = \`
+          <img src="\${item.imagen}" alt="\${item.nombre}" />
+          <div class="info">
+            <strong>\${item.nombre}</strong><br />
+            $ \${item.precio}
+          </div>
+        \`;
+        resumenDiv.appendChild(div);
+        total += item.precio;
+      });
+
+      totalSpan.textContent = total;
+
+      const mensaje = carrito.map((item, i) => \`\${i + 1}. \${item.nombre} - $\${item.precio}\`).join('%0A');
+      const texto = \`Hola! Quiero hacer un pedido:%0A\${mensaje}%0A%0ATotal: $\${total}\`;
+      enviarBtn.href = \`https://wa.me/54925841686?text=\${texto}\`;
     }
-
-    let total = 0;
-
-    carrito.forEach(item => {
-      const div = document.createElement("div");
-      div.className = "item";
-      div.innerHTML = \`
-        <img src="\${item.imagen}" alt="\${item.nombre}" />
-        <div class="info">
-          <strong>\${item.nombre}</strong><br />
-          $ \${item.precio}
-        </div>
-      \`;
-      resumenDiv.appendChild(div);
-      total += item.precio;
-    });
-
-    totalSpan.textContent = total;
-
-    const mensaje = carrito.map((item, i) => \`\${i+1}. \${item.nombre} - $ \${item.precio}\`).join('%0A');
-    const texto = \`Hola! Quiero hacer un pedido:%0A\${mensaje}%0A%0ATotal: $\${total}\`;
-    enviarBtn.href = \`https://wa.me/54925841686?text=\${texto}\`;
   </script>
 </body>
 </html>
