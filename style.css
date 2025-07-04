@@ -1,0 +1,175 @@
+
+/* Paleta: blanco, beige */
+:root {
+  --color-fondo: #fff8f5;
+  --color-beige: #f5e9dc;
+  --color-principal: #f5e9dc;
+  --color-dorado: #bfa76f;
+  --color-texto: #333;
+  --color-blanco: #ffffff;
+  --sombra: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+header {
+  background-color: var(--color-principal);
+  color: var(--color-blanco);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--sombra);
+}
+
+.logo {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--color-dorado);
+}
+
+nav {
+  background-color: var(--color-beige);
+  padding: 0.5rem 1rem;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+  overflow-x: auto;
+}
+
+nav li {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background-color: var(--color-fondo);
+  transition: background-color 0.3s ease;
+}
+
+nav li:hover {
+  background-color: var(--color-principal);
+  color: white;
+}
+
+#product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.product {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: var(--sombra);
+  text-align: center;
+}
+
+.product img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.product h3 {
+  margin: 0.5rem 0 0.3rem;
+}
+
+.product p {
+  margin: 0.3rem 0;
+}
+
+.product button {
+  margin-top: 0.5rem;
+  padding: 0.4rem 1rem;
+  background-color: var(--color-principal);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.product button:hover {
+  background-color: #d8c3af;
+}
+
+#cart {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background: var(--color-beige);
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  padding: 1rem;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+#cart.visible {
+  transform: translateX(0);
+}
+
+#cart h2 {
+  margin-top: 0;
+}
+
+#cart-items {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+#cart-items li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+#cart-items img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  margin-right: 0.5rem;
+  border-radius: 6px;
+}
+
+#whatsapp-btn {
+  background-color: var(--color-principal);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  font-size: 1rem;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#whatsapp-btn:hover {
+  background-color: #d8c3af;
+}
+
+@media (max-width: 600px) {
+  nav ul {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  #cart {
+    width: 100%;
+  }
+}
