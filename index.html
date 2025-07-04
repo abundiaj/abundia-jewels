@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Abundia Jewels</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
 </head>
 <body>
   <header>
@@ -33,21 +34,5 @@
     <p><strong>Total: $<span id="cart-total">0</span></strong></p>
     <button id="whatsapp-btn" data-whatsapp="54925841686">Finalizar pedido por WhatsApp</button>
   </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const cart = document.getElementById("cart");
-      const toggleOutside = document.getElementById("toggle-cart");
-      const toggleInside = document.getElementById("toggle-cart-inside");
-
-      function toggleCart() {
-        cart.classList.toggle("visible");
-      }
-
-      toggleOutside.addEventListener("click", toggleCart);
-      toggleInside.addEventListener("click", toggleCart);
-    });
-  </script>
-  <script src="script.js"></script>
 </body>
 </html>
