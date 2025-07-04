@@ -23,23 +23,38 @@
   <a id="enviar" class="btn" href="#" target="_blank">Enviar por WhatsApp</a>
 
   <script>
-    function getCarritoFromURL() {
+    function obtenerCarrito() {
       const params = new URLSearchParams(window.location.search);
-      const raw = params.get("carrito");
-      try {
-        const decoded = decodeURIComponent(raw);
-        return JSON.parse(decoded);
-      } catch (e) {
-        console.error("Error al leer el carrito:", e);
-        return [];
+      let carrito = [];
+
+      if (params.has("carrito")) {
+        try {
+          const decoded = decodeURIComponent(params.get("carrito"));
+          carrito = JSON.parse(decoded);
+          localStorage.setItem("carritoAbundia", JSON.stringify(carrito));
+        } catch (e) {
+          console.error("Error al leer el carrito de la URL:", e);
+        }
+      } else {
+        const guardado = localStorage.getItem("carritoAbundia");
+        if (guardado) {
+          try {
+            carrito = JSON.parse(guardado);
+          } catch (e) {
+            console.error("Error al leer el carrito del almacenamiento:", e);
+          }
+        }
       }
+
+      return carrito;
     }
 
     const resumenDiv = document.getElementById("resumen");
     const totalSpan = document.getElementById("total");
     const enviarBtn = document.getElementById("enviar");
 
-    const carrito = getCarritoFromURL();
+    const carrito = obtenerCarrito();
+
     if (!carrito.length) {
       resumenDiv.innerHTML = "<p>No se encontraron productos en el carrito.</p>";
       enviarBtn.style.display = "none";
