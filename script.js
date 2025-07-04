@@ -12,7 +12,6 @@ const cartCount = document.getElementById("cart-count");
 const cartTotal = document.getElementById("cart-total");
 const whatsappBtn = document.getElementById("whatsapp-btn");
 
-// Cargar CSV desde Google Sheets y convertir a objetos
 async function cargarProductosDesdeSheet() {
   const res = await fetch(sheetURL);
   const csv = await res.text();
@@ -39,10 +38,10 @@ function renderProductos() {
     const div = document.createElement("div");
     div.className = "product";
     div.innerHTML = `
-      <img src="\${prod.imagen}" alt="\${prod.nombre}" />
-      <h3>\${prod.nombre}</h3>
-      <p>$\${prod.precio}</p>
-      <button onclick='agregarAlCarrito(\${JSON.stringify(prod)})'>Agregar al carrito</button>
+      <img src="${prod.imagen}" alt="${prod.nombre}" />
+      <h3>${prod.nombre}</h3>
+      <p>$${prod.precio}</p>
+      <button onclick='agregarAlCarrito(${JSON.stringify(prod)})'>Agregar al carrito</button>
     `;
     productList.appendChild(div);
   });
@@ -58,7 +57,7 @@ function actualizarCarrito() {
   let total = 0;
   carrito.forEach(item => {
     const li = document.createElement("li");
-    li.innerHTML = `<img src="\${item.imagen}" alt="\${item.nombre}" /><span>\${item.nombre} - $\${item.precio}</span>`;
+    li.innerHTML = `<img src="${item.imagen}" alt="${item.nombre}" /><span>${item.nombre} - $${item.precio}</span>`;
     cartItems.appendChild(li);
     total += item.precio;
   });
@@ -82,11 +81,11 @@ whatsappBtn.addEventListener("click", () => {
   if (carrito.length === 0) return alert("El carrito está vacío.");
   let mensaje = "Hola! Quiero hacer un pedido:%0A";
   carrito.forEach((item, i) => {
-    mensaje += `%0A\${i + 1}. \${item.nombre} - $\${item.precio}`;
+    mensaje += `%0A${i + 1}. ${item.nombre} - $${item.precio}`;
   });
   const total = carrito.reduce((acc, item) => acc + item.precio, 0);
-  mensaje += `%0A%0ATotal: $\${total}`;
-  const url = `https://wa.me/\${numero}?text=\${mensaje}`;
+  mensaje += `%0A%0ATotal: $${total}`;
+  const url = `https://wa.me/${numero}?text=${mensaje}`;
   window.open(url, "_blank");
 });
 
