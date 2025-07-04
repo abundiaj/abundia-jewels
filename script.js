@@ -16,7 +16,6 @@ async function cargarProductosDesdeSheet() {
   const res = await fetch(sheetURL);
   const csv = await res.text();
   const lines = csv.trim().split("\n");
-  const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
 
   productos = lines.slice(1).map(line => {
     const data = line.split(",");
@@ -38,10 +37,10 @@ function renderProductos() {
     const div = document.createElement("div");
     div.className = "product";
     div.innerHTML = `
-      <img src="${prod.imagen}" alt="${prod.nombre}" />
-      <h3>${prod.nombre}</h3>
-      <p>$${prod.precio}</p>
-      <button onclick='agregarAlCarrito(${JSON.stringify(prod)})'>Agregar al carrito</button>
+      <img src="\${prod.imagen}" alt="\${prod.nombre}" />
+      <h3>\${prod.nombre}</h3>
+      <p>$\${prod.precio}</p>
+      <button onclick='agregarAlCarrito(\${JSON.stringify(prod)})'>Agregar al carrito</button>
     `;
     productList.appendChild(div);
   });
@@ -63,9 +62,9 @@ function actualizarCarrito() {
   carrito.forEach((item, index) => {
     const li = document.createElement("li");
     li.innerHTML = `
-      <img src="${item.imagen}" alt="${item.nombre}" />
-      <span>${item.nombre} - $${item.precio}</span>
-      <button style="margin-left:auto;" onclick="eliminarDelCarrito(${index})">❌</button>
+      <img src="\${item.imagen}" alt="\${item.nombre}" />
+      <span>\${item.nombre} - $\${item.precio}</span>
+      <button style="margin-left:auto;" onclick="eliminarDelCarrito(\${index})">❌</button>
     `;
     cartItems.appendChild(li);
     total += item.precio;
@@ -78,17 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleOutside = document.getElementById("toggle-cart");
   const toggleInside = document.getElementById("toggle-cart-inside");
 
-  if (toggleOutside) {
-    toggleOutside.addEventListener("click", () => {
-      cart.classList.toggle("visible");
-    });
-  }
-
-  if (toggleInside) {
-    toggleInside.addEventListener("click", () => {
-      cart.classList.toggle("visible");
-    });
-  }
+  if (toggleOutside) toggleOutside.addEventListener("click", () => cart.classList.toggle("visible"));
+  if (toggleInside) toggleInside.addEventListener("click", () => cart.classList.toggle("visible"));
 
   document.querySelectorAll("#categories li").forEach(li => {
     li.addEventListener("click", () => {
@@ -98,16 +88,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   whatsappBtn.addEventListener("click", () => {
-    const numero = whatsappBtn.dataset.whatsapp;
     if (carrito.length === 0) return alert("El carrito está vacío.");
-    let mensaje = "Hola! Quiero hacer un pedido:%0A";
-    carrito.forEach((item, i) => {
-      mensaje += `%0A${i + 1}. ${item.nombre} - $${item.precio}`;
-    });
-    const total = carrito.reduce((acc, item) => acc + item.precio, 0);
-    mensaje += `%0A%0ATotal: $${total}`;
-    const url = `https://wa.me/${numero}?text=${mensaje}`;
-    window.open(url, "_blank");
+    const encoded = encodeURIComponent(JSON.stringify(carrito));
+    window.location.href = \`pedido.html?carrito=\${encoded}\`;
   });
 
   cargarProductosDesdeSheet();
