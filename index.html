@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abundia Jewels</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="img/logo.png" alt="Logo Abundia Jewels" />
+      <h1>Abundia Jewels</h1>
+    </div>
+    <button id="toggle-cart">🛒 Carrito (<span id="cart-count">0</span>)</button>
+  </header>
+
+  <nav>
+    <ul id="categories">
+      <li data-category="cadenas">Cadenas</li>
+      <li data-category="pulseras">Pulseras</li>
+      <li data-category="aros">Aros</li>
+      <li data-category="collares">Collares</li>
+      <li data-category="dijes">Dijes</li>
+      <li data-category="anillos">Anillos</li>
+    </ul>
+  </nav>
+
+  <main id="product-list"></main>
+
+  <aside id="cart" class="hidden">
+    <h2>Carrito</h2>
+    <ul id="cart-items"></ul>
+    <p>Total: $<span id="cart-total">0</span></p>
+    <button id="whatsapp-btn" data-whatsapp="+54925841686">Finalizar pedido por WhatsApp</button>
+  </aside>
+
+  <script src="script.js"></script>
+</body>
+</html>
