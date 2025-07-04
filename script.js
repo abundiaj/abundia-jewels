@@ -74,28 +74,41 @@ function actualizarCarrito() {
   cartTotal.textContent = total;
 }
 
-document.getElementById("toggle-cart").addEventListener("click", () => {
-  cart.classList.toggle("visible");
-});
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleOutside = document.getElementById("toggle-cart");
+  const toggleInside = document.getElementById("toggle-cart-inside");
 
-document.querySelectorAll("#categories li").forEach(li => {
-  li.addEventListener("click", () => {
-    categoriaActual = li.dataset.category;
-    renderProductos();
+  if (toggleOutside) {
+    toggleOutside.addEventListener("click", () => {
+      cart.classList.toggle("visible");
+    });
+  }
+
+  if (toggleInside) {
+    toggleInside.addEventListener("click", () => {
+      cart.classList.toggle("visible");
+    });
+  }
+
+  document.querySelectorAll("#categories li").forEach(li => {
+    li.addEventListener("click", () => {
+      categoriaActual = li.dataset.category;
+      renderProductos();
+    });
   });
-});
 
-whatsappBtn.addEventListener("click", () => {
-  const numero = whatsappBtn.dataset.whatsapp;
-  if (carrito.length === 0) return alert("El carrito está vacío.");
-  let mensaje = "Hola! Quiero hacer un pedido:%0A";
-  carrito.forEach((item, i) => {
-    mensaje += `%0A${i + 1}. ${item.nombre} - $${item.precio}`;
+  whatsappBtn.addEventListener("click", () => {
+    const numero = whatsappBtn.dataset.whatsapp;
+    if (carrito.length === 0) return alert("El carrito está vacío.");
+    let mensaje = "Hola! Quiero hacer un pedido:%0A";
+    carrito.forEach((item, i) => {
+      mensaje += `%0A${i + 1}. ${item.nombre} - $${item.precio}`;
+    });
+    const total = carrito.reduce((acc, item) => acc + item.precio, 0);
+    mensaje += `%0A%0ATotal: $${total}`;
+    const url = `https://wa.me/${numero}?text=${mensaje}`;
+    window.open(url, "_blank");
   });
-  const total = carrito.reduce((acc, item) => acc + item.precio, 0);
-  mensaje += `%0A%0ATotal: $${total}`;
-  const url = `https://wa.me/${numero}?text=${mensaje}`;
-  window.open(url, "_blank");
-});
 
-cargarProductosDesdeSheet();
+  cargarProductosDesdeSheet();
+});
