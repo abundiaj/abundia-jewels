@@ -52,12 +52,21 @@ function agregarAlCarrito(prod) {
   actualizarCarrito();
 }
 
+function eliminarDelCarrito(index) {
+  carrito.splice(index, 1);
+  actualizarCarrito();
+}
+
 function actualizarCarrito() {
   cartItems.innerHTML = "";
   let total = 0;
-  carrito.forEach(item => {
+  carrito.forEach((item, index) => {
     const li = document.createElement("li");
-    li.innerHTML = `<img src="${item.imagen}" alt="${item.nombre}" /><span>${item.nombre} - $${item.precio}</span>`;
+    li.innerHTML = `
+      <img src="${item.imagen}" alt="${item.nombre}" />
+      <span>${item.nombre} - $${item.precio}</span>
+      <button style="margin-left:auto;" onclick="eliminarDelCarrito(${index})">❌</button>
+    `;
     cartItems.appendChild(li);
     total += item.precio;
   });
