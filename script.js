@@ -33,16 +33,23 @@ async function cargarProductosDesdeSheet() {
 function renderProductos() {
   productList.innerHTML = "";
   const filtrados = productos.filter(p => p.categoria === categoriaActual);
-  filtrados.forEach(prod => {
+  filtrados.forEach((prod, index) => {
     const div = document.createElement("div");
     div.className = "product";
     div.innerHTML = `
-      <img src="\${prod.imagen}" alt="\${prod.nombre}" />
-      <h3>\${prod.nombre}</h3>
-      <p>$\${prod.precio}</p>
-      <button onclick='agregarAlCarrito(\${JSON.stringify(prod)})'>Agregar al carrito</button>
+      <img src="${prod.imagen}" alt="${prod.nombre}" />
+      <h3>${prod.nombre}</h3>
+      <p>$${prod.precio}</p>
+      <button data-index="${index}" class="add-btn">Agregar al carrito</button>
     `;
     productList.appendChild(div);
+  });
+
+  document.querySelectorAll(".add-btn").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const idx = e.target.dataset.index;
+      agregarAlCarrito(productos[idx]);
+    });
   });
 }
 
@@ -62,9 +69,9 @@ function actualizarCarrito() {
   carrito.forEach((item, index) => {
     const li = document.createElement("li");
     li.innerHTML = `
-      <img src="\${item.imagen}" alt="\${item.nombre}" />
-      <span>\${item.nombre} - $\${item.precio}</span>
-      <button style="margin-left:auto;" onclick="eliminarDelCarrito(\${index})">❌</button>
+      <img src="${item.imagen}" alt="${item.nombre}" />
+      <span>${item.nombre} - $${item.precio}</span>
+      <button style="margin-left:auto;" onclick="eliminarDelCarrito(${index})">❌</button>
     `;
     cartItems.appendChild(li);
     total += item.precio;
@@ -90,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
   whatsappBtn.addEventListener("click", () => {
     if (carrito.length === 0) return alert("El carrito está vacío.");
     const encoded = encodeURIComponent(JSON.stringify(carrito));
-    window.location.href = \`pedido.html?carrito=\${encoded}\`;
+    window.location.href = `pedido.html?carrito=${encoded}`;
   });
 
   cargarProductosDesdeSheet();
