@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (carrito.length === 0) return alert("El carrito está vacío.");
     const mensaje = carrito.map((item, i) => `${i + 1}. ${item.nombre} - $${item.precio}`).join('%0A');
     const texto = `Hola! Quiero hacer un pedido:%0A${mensaje}`;
-    window.open(`https://wa.me/54925841686?text=${texto}`, "_blank");
+    window.open(`https://wa.me/5491125841686?text=${texto}`, "_blank");
   });
 
   cargarProductosDesdeSheet();
