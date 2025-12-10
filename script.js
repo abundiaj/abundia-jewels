@@ -32,7 +32,10 @@ async function cargarProductosDesdeSheet() {
 
 function renderProductos() {
   productList.innerHTML = "";
-  const filtrados = productos.filter(p => p.categoria === categoriaActual);
+  const filtrados = productos.filter(p =>
+    p.categoria &&
+    p.categoria.trim().toLowerCase() === categoriaActual.trim().toLowerCase()
+);
   filtrados.forEach((prod) => {
     const div = document.createElement("div");
     div.className = "product";
