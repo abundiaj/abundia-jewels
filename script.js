@@ -3,7 +3,7 @@ const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHLrhQjaxFPEO
 
 let productos = [];
 let carrito = [];
-let categoriaActual = "cadenas";
+let categoriaActual = "cocina";
 
 const productList = document.getElementById("product-list");
 const cart = document.getElementById("cart");
@@ -32,10 +32,19 @@ async function cargarProductosDesdeSheet() {
 
 function renderProductos() {
   productList.innerHTML = "";
-  const filtrados = productos.filter(p =>
-    p.categoria &&
-    p.categoria.trim().toLowerCase() === categoriaActual.trim().toLowerCase()
-);
+  
+  // Filtramos asegurándonos de que ambos estén en minúsculas y sin espacios
+  const filtrados = productos.filter(p => 
+    p.categoria && p.categoria.trim().toLowerCase() === categoriaActual.trim().toLowerCase()
+  );
+
+  // Mensaje de aviso si la categoría está vacía
+  if (filtrados.length === 0) {
+    productList.innerHTML = `<p style="text-align:center; grid-column: 1/-1;">
+      Próximamente más productos en ${categoriaActual}...</p>`;
+    return;
+  }
+
   filtrados.forEach((prod) => {
     const div = document.createElement("div");
     div.className = "product";
