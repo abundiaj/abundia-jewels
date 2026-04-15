@@ -95,11 +95,11 @@ nav li:hover {
 }
 
 .product h3 {
-  white-space: pre-wrap; /* Mantiene los saltos de línea que hagas en el Excel */
+  white-space: pre-wrap; /* Esta es la propiedad mágica */
   text-align: center;
-  font-size: 1.1rem;
-  color: var(--color-texto);
+  line-height: 1.5;
   margin: 10px 0;
+  font-size: 1.1rem;
 }
 
 .product p {
