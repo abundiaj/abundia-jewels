@@ -1,4 +1,4 @@
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHLrhQjaxFPEOVWmL1Q7qiE7ddk5RXkgZm-3pDFTtAq2e6oUKs6r7qM2lHUOtTxrXQKBBNX6QKZMD7/pub?output=csv";
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHLrhQjaxFPEOVWmL1Q7qiE7ddk5RXkgZm-3pDFTtAq2e6oUKs6r7qM2lHUOtTxrXQKBBNX6QKZMD7/pub?output=tsv";
 
 let productos = [];
 let carrito = [];
@@ -14,33 +14,28 @@ const whatsappBtn = document.getElementById("whatsapp-btn");
 async function cargarProductosDesdeSheet() {
   try {
     const res = await fetch(sheetURL);
-    const csv = await res.text();
-    // Limpiamos líneas vacías al final
-    const lines = csv.trim().split("\n").filter(line => line.trim() !== "");
+    const texto = await res.text();
+    // Separamos por filas
+    const filas = texto.split("\n").filter(f => f.trim() !== "");
 
-   productos = lines.slice(1).map(line => {
-  const data = line.split(",");
-  if (data.length >= 4) {
-    const categoria = data.pop().trim().toLowerCase();
-    const imagen = data.pop().trim();
-    const precioRaw = data.pop().trim();
-    
-    const textoCompleto = data.join(",").replace(/"/g, "").trim();
+    productos = filas.slice(1).map(fila => {
+      // Separamos por TABULADOR en lugar de COMAS
+      const celdas = fila.split("\t");
+      
+      if (celdas.length >= 4) {
+        return {
+          nombre: celdas[0].trim(),
+          precio: parseFloat(celdas[1].replace("$", "")) || 0,
+          imagen: celdas[2].trim(),
+          categoria: celdas[3].trim().toLowerCase()
+        };
+      }
+      return null;
+    }).filter(p => p !== null);
 
-    return {
-      nombre: textoCompleto,
-      precio: parseFloat(precioRaw) || 0,
-      imagen: imagen,
-      categoria: categoria
-    };
-  }
-  return null;
-}).filter(p => p !== null);
-
-    console.log("Productos cargados:", productos);
     renderProductos();
   } catch (error) {
-    console.error("Error en la carga:", error);
+    console.error("Error al cargar datos:", error);
   }
 }
 
