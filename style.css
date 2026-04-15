@@ -197,10 +197,44 @@ nav li:hover {
 }
 
 @media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .logo-container {
+    width: 100%;
+    justify-content: center;
+    gap: 0px;
+  }
+
+  .header-logo {
+    height: 80px;
+    margin-right: -10px;
+  }
+
+  .logo {
+    font-size: 2rem;
+    margin-left: 0; 
+  }
+
+  #toggle-cart {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: var(--color-blanco);
+    border-radius: 20px;
+    box-shadow: var(--sombra);
+  }
+
   nav ul {
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0.5rem;
   }
+
   #cart {
     width: 100%;
   }
