@@ -18,19 +18,24 @@ async function cargarProductosDesdeSheet() {
     // Limpiamos líneas vacías al final
     const lines = csv.trim().split("\n").filter(line => line.trim() !== "");
 
-    productos = lines.slice(1).map(line => {
-      const data = line.split(",");
-      // Solo procesamos si la fila tiene al menos los 4 datos necesarios
-      if (data && data.length >= 4) {
-        return {
-          nombre: data[0] ? data[0].trim() : "Producto",
-          precio: parseFloat(data[1]) || 0,
-          imagen: data[2] ? data[2].trim() : "",
-          categoria: data[3] ? data[3].trim().toLowerCase() : ""
-        };
-      }
-      return null;
-    }).filter(p => p !== null);
+   productos = lines.slice(1).map(line => {
+  const data = line.split(",");
+  if (data.length >= 4) {
+    const categoria = data.pop().trim().toLowerCase();
+    const imagen = data.pop().trim();
+    const precioRaw = data.pop().trim();
+    
+    const textoCompleto = data.join(",").replace(/"/g, "").trim();
+
+    return {
+      nombre: textoCompleto,
+      precio: parseFloat(precioRaw) || 0,
+      imagen: imagen,
+      categoria: categoria
+    };
+  }
+  return null;
+}).filter(p => p !== null);
 
     console.log("Productos cargados:", productos);
     renderProductos();
