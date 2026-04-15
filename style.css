@@ -40,8 +40,8 @@ header {
 }
 
 .header-logo {
-  height: 55px;          /* Altura del logo */
-  width: 55px;           /* Debe ser igual a la altura para un círculo perfecto */
+  height: 90px;          /* Altura del logo */
+  width: 90px;           /* Debe ser igual a la altura para un círculo perfecto */
   object-fit: cover;     /* Ajusta la imagen al círculo sin deformarla */
   border-radius: 50%;    /* Esta línea hace que la imagen sea circular */
   border: 1px solid #ddd; /* Opcional: un borde fino para resaltar el logo */
