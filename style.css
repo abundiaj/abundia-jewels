@@ -95,7 +95,9 @@ nav li:hover {
 }
 
 .product h3 {
-  margin: 0.5rem 0 0.3rem;
+  white-space: pre-line; /* Permite saltos de línea dentro del título */
+  margin-bottom: 10px;
+  line-height: 1.4;
 }
 
 .product p {
