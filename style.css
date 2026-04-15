@@ -36,12 +36,14 @@ header {
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
 }
 
 .header-logo {
-  height: 90px;          /* Altura del logo */
-  width: 90px;           /* Debe ser igual a la altura para un círculo perfecto */ 
+  height: 120px;
+  width: auto;
+  object-fit: contain;
+  margin: 5px 0;
 }
 
 nav {
