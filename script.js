@@ -1,9 +1,8 @@
-
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHLrhQjaxFPEOVWmL1Q7qiE7ddk5RXkgZm-3pDFTtAq2e6oUKs6r7qM2lHUOtTxrXQKBBNX6QKZMD7/pub?output=csv";
 
 let productos = [];
 let carrito = [];
-let categoriaActual = "cocina";
+let categoriaActual = "cocina"; // Cambié esto a cocina para que coincida con tu nuevo rubro
 
 const productList = document.getElementById("product-list");
 const cart = document.getElementById("cart");
@@ -16,44 +15,38 @@ async function cargarProductosDesdeSheet() {
   try {
     const res = await fetch(sheetURL);
     const csv = await res.text();
-    // Esto limpia líneas vacías que el Excel a veces manda al final
+    // Limpiamos líneas vacías al final
     const lines = csv.trim().split("\n").filter(line => line.trim() !== "");
 
     productos = lines.slice(1).map(line => {
       const data = line.split(",");
-      
-      // Verificamos que la fila tenga datos suficientes para no romperse
-      if (data.length >= 4 && data[0] && data[3]) {
+      // Solo procesamos si la fila tiene al menos los 4 datos necesarios
+      if (data && data.length >= 4) {
         return {
-          nombre: data[0].trim(),
+          nombre: data[0] ? data[0].trim() : "Producto",
           precio: parseFloat(data[1]) || 0,
           imagen: data[2] ? data[2].trim() : "",
-          categoria: data[3].trim().toLowerCase()
+          categoria: data[3] ? data[3].trim().toLowerCase() : ""
         };
       }
-      return null; 
-    }).filter(p => p !== null); 
+      return null;
+    }).filter(p => p !== null);
 
+    console.log("Productos cargados:", productos);
     renderProductos();
   } catch (error) {
-    console.error("Error cargando el Excel:", error);
+    console.error("Error en la carga:", error);
   }
-}
-  renderProductos();
 }
 
 function renderProductos() {
   productList.innerHTML = "";
-  
-  // Filtramos asegurándonos de que ambos estén en minúsculas y sin espacios
   const filtrados = productos.filter(p => 
-    p.categoria && p.categoria.trim().toLowerCase() === categoriaActual.trim().toLowerCase()
+    p.categoria && p.categoria === categoriaActual.toLowerCase()
   );
 
-  // Mensaje de aviso si la categoría está vacía
   if (filtrados.length === 0) {
-    productList.innerHTML = `<p style="text-align:center; grid-column: 1/-1;">
-      Próximamente más productos en ${categoriaActual}...</p>`;
+    productList.innerHTML = `<p style="text-align:center; grid-column: 1/-1;">Próximamente más productos en ${categoriaActual}...</p>`;
     return;
   }
 
@@ -77,11 +70,6 @@ function agregarAlCarrito(prod) {
   actualizarCarrito();
 }
 
-function eliminarDelCarrito(index) {
-  carrito.splice(index, 1);
-  actualizarCarrito();
-}
-
 function actualizarCarrito() {
   cartItems.innerHTML = "";
   let total = 0;
@@ -95,9 +83,14 @@ function actualizarCarrito() {
     cartItems.appendChild(li);
     total += item.precio;
   });
-  cartCount.textContent = carrito.length;
-  cartTotal.textContent = total;
+  if(cartCount) cartCount.textContent = carrito.length;
+  if(cartTotal) cartTotal.textContent = total;
 }
+
+window.eliminarDelCarrito = function(index) {
+  carrito.splice(index, 1);
+  actualizarCarrito();
+};
 
 document.addEventListener("DOMContentLoaded", () => {
   const toggleOutside = document.getElementById("toggle-cart");
@@ -113,14 +106,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  whatsappBtn.addEventListener("click", () => {
-  if (carrito.length === 0) return alert("El carrito está vacío.");
-  const mensaje = carrito.map((item, i) => `${i + 1}. ${item.nombre} - $${item.precio}`).join('%0A');
-  const total = carrito.reduce((sum, item) => sum + item.precio, 0);
-  const texto = `Hola! Quiero hacer un pedido:%0A${mensaje}%0A%0ATotal: $${total}`;
-  window.open(`https://wa.me/5491125841686?text=${texto}`, "_blank");
-});
-
+  if(whatsappBtn) {
+    whatsappBtn.addEventListener("click", () => {
+      if (carrito.length === 0) return alert("El carrito está vacío.");
+      const mensaje = carrito.map((item, i) => `${i + 1}. ${item.nombre} - $${item.precio}`).join('%0A');
+      const total = carrito.reduce((sum, item) => sum + item.precio, 0);
+      const texto = `Hola! Quiero hacer un pedido a Abundia:%0A${mensaje}%0A%0ATotal: $${total}`;
+      window.open(`https://wa.me/5491125841686?text=${texto}`, "_blank");
+    });
+  }
 
   cargarProductosDesdeSheet();
 });
