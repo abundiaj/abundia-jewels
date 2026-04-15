@@ -36,14 +36,14 @@ header {
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 5px;
 }
 
 .header-logo {
   height: 120px;
   width: auto;
-  object-fit: contain;
-  margin: 5px 0;
+  margin-right: 0;
+  display: block;
 }
 
 nav {
