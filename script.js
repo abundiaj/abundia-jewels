@@ -13,20 +13,32 @@ const cartTotal = document.getElementById("cart-total");
 const whatsappBtn = document.getElementById("whatsapp-btn");
 
 async function cargarProductosDesdeSheet() {
-  const res = await fetch(sheetURL);
-  const csv = await res.text();
-  const lines = csv.trim().split("\n");
+  try {
+    const res = await fetch(sheetURL);
+    const csv = await res.text();
+    // Esto limpia líneas vacías que el Excel a veces manda al final
+    const lines = csv.trim().split("\n").filter(line => line.trim() !== "");
 
-  productos = lines.slice(1).map(line => {
-    const data = line.split(",");
-    return {
-      nombre: data[0].trim(),
-      precio: parseFloat(data[1]),
-      imagen: data[2].trim(),
-      categoria: data[3].trim().toLowerCase()
-    };
-  });
+    productos = lines.slice(1).map(line => {
+      const data = line.split(",");
+      
+      // Verificamos que la fila tenga datos suficientes para no romperse
+      if (data.length >= 4 && data[0] && data[3]) {
+        return {
+          nombre: data[0].trim(),
+          precio: parseFloat(data[1]) || 0,
+          imagen: data[2] ? data[2].trim() : "",
+          categoria: data[3].trim().toLowerCase()
+        };
+      }
+      return null; 
+    }).filter(p => p !== null); 
 
+    renderProductos();
+  } catch (error) {
+    console.error("Error cargando el Excel:", error);
+  }
+}
   renderProductos();
 }
 
