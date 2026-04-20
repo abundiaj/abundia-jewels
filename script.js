@@ -56,7 +56,7 @@ function renderProductos() {
     div.innerHTML = `
       <img src="${prod.imagen}" alt="${prod.nombre}" />
       <h3>${prod.nombre}</h3>
-      <p>$${prod.precio}</p>
+      <p>$${prod.precio.toLocaleString('es-AR')}</p>
       <button class="add-btn">Agregar al carrito</button>
     `;
     const button = div.querySelector("button");
@@ -77,14 +77,14 @@ function actualizarCarrito() {
     const li = document.createElement("li");
     li.innerHTML = `
       <img src="${item.imagen}" alt="${item.nombre}" />
-      <span>${item.nombre} - $${item.precio}</span>
+      <span>${item.nombre} - $${item.precio.toLocaleString('es-AR')}</span>
       <button style="margin-left:auto;" onclick="eliminarDelCarrito(${index})">❌</button>
     `;
     cartItems.appendChild(li);
     total += item.precio;
   });
   if(cartCount) cartCount.textContent = carrito.length;
-  if(cartTotal) cartTotal.textContent = total;
+  if(cartTotal) cartTotal.textContent = total.toLocaleString('es-AR');
 }
 
 window.eliminarDelCarrito = function(index) {
