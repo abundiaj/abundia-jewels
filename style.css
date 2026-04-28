@@ -22,15 +22,8 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  box-sizing: border-box;
   background-color: var(--color-principal);
-  color: var(--color-blanco);
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: var(--sombra);
-  z-index: 1100;
+  z-index: 2000;
 }
 
 .logo {
@@ -55,14 +48,11 @@ header {
 
 nav {
   position: fixed;
-  top: 152px;
+  top: 152px; /* Ajustá esto si el logo es más chico en móvil */
   left: 0;
   width: 100%;
-  box-sizing: border-box;
   background-color: var(--color-beige);
-  padding: 0.5rem 1rem;
-  z-index: 1050;
-  box-shadow: var(--sombra);
+  z-index: 1000;
 }
 
 nav ul {
@@ -216,17 +206,19 @@ nav li:hover {
 
 @media (max-width: 600px) {
   body {
-    padding-top: 260px;
+    padding-top: 280px;
   }
   
   header {
-    flex-direction: column;
-    padding: 10px;
-    gap: 10px;
+    position: fixed;
+    top: 0;
+    z-index: 2000;
   }
 
   nav {
-    top: 175px;
+    position: fixed;
+    top: 170px;
+    z-index: 1500;
   }
 
   .logo-container {
