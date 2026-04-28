@@ -129,16 +129,16 @@ nav li:hover {
 #cart {
   position: fixed;
   right: 0;
-  top: 0;
+  top: 0;           /* Lo dejamos en 0 para que cubra toda la altura */
   width: 300px;
   height: 100%;
   background: var(--color-beige);
-  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
   padding: 1rem;
   overflow-y: auto;
   transform: translateX(100%);
   transition: transform 0.3s ease;
-  z-index: 1000;
+  z-index: 3000;    /* Superior al Header (2000) y al Nav (1500) */
 }
 
 #cart.visible {
