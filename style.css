@@ -10,11 +10,7 @@
 }
 
 body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: var(--color-fondo);
-  color: var(--color-texto);
-  padding-top: 220px; 
+  padding-top: 230px;
 }
 
 header {
@@ -22,8 +18,15 @@ header {
   top: 0;
   left: 0;
   width: 100%;
+  height: 152px;
   background-color: var(--color-principal);
   z-index: 2000;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .logo {
@@ -48,11 +51,14 @@ header {
 
 nav {
   position: fixed;
-  top: 152px; /* Ajustá esto si el logo es más chico en móvil */
+  top: 152px;
   left: 0;
   width: 100%;
   background-color: var(--color-beige);
-  z-index: 1000;
+  z-index: 1900;
+  margin: 0;
+  padding: 10px 0;
+  box-shadow: var(--sombra);
 }
 
 nav ul {
@@ -213,19 +219,18 @@ nav li:hover {
 
 @media (max-width: 600px) {
   body {
-    padding-top: 280px;
+    padding-top: 280px; /* Ajustamos para que no se tape el primer producto */
   }
   
   header {
-    position: fixed;
-    top: 0;
-    z-index: 2000;
+    height: 170px; /* Un poco más alto para el logo en móvil */
+    flex-direction: column;
+    padding: 10px;
+    justify-content: center;
   }
 
   nav {
-    position: fixed;
-    top: 170px;
-    z-index: 1500;
+    top: 170px; /* Sigue al nuevo alto del header móvil */
   }
 
   .logo-container {
