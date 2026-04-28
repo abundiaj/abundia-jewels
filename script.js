@@ -100,11 +100,14 @@ document.addEventListener("DOMContentLoaded", () => {
   if (toggleInside) toggleInside.addEventListener("click", () => cart.classList.toggle("visible"));
 
   document.querySelectorAll("#categories li").forEach(li => {
-    li.addEventListener("click", () => {
-      categoriaActual = li.dataset.category;
-      renderProductos();
-    });
+  li.addEventListener("click", () => {
+    categoriaActual = li.dataset.category;
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    
+    renderProductos();
   });
+});
 
   if(whatsappBtn) {
     whatsappBtn.addEventListener("click", () => {
