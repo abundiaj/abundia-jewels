@@ -2,7 +2,7 @@ const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHLrhQjaxFPEO
 
 let productos = [];
 let carrito = [];
-let categoriaActual = "cocina"; // Cambié esto a cocina para que coincida con tu nuevo rubro
+let categoriaActual = "cocina"; 
 
 const productList = document.getElementById("product-list");
 const cart = document.getElementById("cart");
@@ -15,17 +15,14 @@ async function cargarProductosDesdeSheet() {
   try {
     const res = await fetch(sheetURL);
     const texto = await res.text();
-    // Separamos por filas
     const filas = texto.split("\n").filter(f => f.trim() !== "");
 
     productos = filas.slice(1).map(fila => {
-      // Separamos por TABULADOR en lugar de COMAS
       const celdas = fila.split("\t");
-      
       if (celdas.length >= 4) {
         return {
           nombre: celdas[0].trim(),
-          precio: parseFloat(celdas[1].replace("$", "")) || 0,
+          precio: parseFloat(celdas[1].replace("$", "").replace(".", "")) || 0,
           imagen: celdas[2].trim(),
           categoria: celdas[3].trim().toLowerCase()
         };
@@ -40,6 +37,7 @@ async function cargarProductosDesdeSheet() {
 }
 
 function renderProductos() {
+  if (!productList) return;
   productList.innerHTML = "";
   const filtrados = productos.filter(p => 
     p.categoria && p.categoria === categoriaActual.toLowerCase()
@@ -67,19 +65,17 @@ function renderProductos() {
 
 function agregarAlCarrito(prod) {
   const existe = carrito.find(item => item.nombre === prod.nombre);
-
   if (existe) {
     existe.cantidad += 1;
   } else {
     carrito.push({ ...prod, cantidad: 1 });
   }
- 
   actualizarCarrito();
-  
-  document.getElementById("cart").classList.add("visible");
+  if (cart) cart.classList.add("visible");
 }
 
 function actualizarCarrito() {
+  if (!cartItems) return;
   cartItems.innerHTML = "";
   let total = 0;
 
@@ -89,7 +85,6 @@ function actualizarCarrito() {
     li.style.alignItems = "center";
     li.style.marginBottom = "10px";
     
-    // Calculamos el subtotal de este ítem
     const subtotal = item.precio * item.cantidad;
     total += subtotal;
 
@@ -98,7 +93,7 @@ function actualizarCarrito() {
       <div style="flex-grow:1;">
         <div style="font-weight:bold; font-size:0.9rem;">${item.nombre}</div>
         <div style="font-size:0.8rem; color:#666;">
-          ${item.cantidad} x $${item.precio.toLocaleString('es-AR')} = **$${subtotal.toLocaleString('es-AR')}**
+          ${item.cantidad} x $${item.precio.toLocaleString('es-AR')} = $${subtotal.toLocaleString('es-AR')}
         </div>
       </div>
       <button onclick="eliminarDelCarrito(${index})" style="background:none; border:none; color:red; cursor:pointer; font-size:1.2rem; margin-left:10px;">🗑️</button>
@@ -106,7 +101,6 @@ function actualizarCarrito() {
     cartItems.appendChild(li);
   });
 
-  // Actualizamos el contador total de ítems (sumando las cantidades)
   const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
   if(cartCount) cartCount.textContent = totalItems;
   if(cartTotal) cartTotal.textContent = total.toLocaleString('es-AR');
@@ -114,10 +108,8 @@ function actualizarCarrito() {
 
 window.eliminarDelCarrito = function(index) {
   if (carrito[index].cantidad > 1) {
-    // Si hay más de uno, restamos uno
     carrito[index].cantidad -= 1;
   } else {
-    // Si hay solo uno, eliminamos el producto del array
     carrito.splice(index, 1);
   }
   actualizarCarrito();
@@ -131,25 +123,23 @@ document.addEventListener("DOMContentLoaded", () => {
   if (toggleInside) toggleInside.addEventListener("click", () => cart.classList.toggle("visible"));
 
   document.querySelectorAll("#categories li").forEach(li => {
-  li.addEventListener("click", () => {
-    categoriaActual = li.dataset.category;
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' }); 
-    
-    renderProductos();
+    li.addEventListener("click", () => {
+      categoriaActual = li.dataset.category;
+      window.scrollTo({ top: 0, behavior: 'smooth' }); 
+      renderProductos();
+    });
   });
-});
 
   if(whatsappBtn) {
     whatsappBtn.addEventListener("click", () => {
-  if (carrito.length === 0) return alert("El carrito está vacío.");
-  
-  const mensaje = carrito.map(item => `- ${item.nombre} (x${item.cantidad}) - Subtotal: $${(item.precio * item.cantidad).toLocaleString('es-AR')}`).join('%0A');
-  const totalFinal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-  
-  const texto = `Hola Abundia! Quiero hacer un pedido:%0A${mensaje}%0A%0A*Total: $${totalFinal.toLocaleString('es-AR')}*`;
-  window.open(`https://wa.me/5491125841686?text=${texto}`, "_blank");
-});
+      if (carrito.length === 0) return alert("El carrito está vacío.");
+      const mensaje = carrito.map(item => `- ${item.nombre} (x${item.cantidad})`).join('%0A');
+      const totalFinal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+      const texto = `Hola Abundia! Quiero hacer un pedido:%0A${mensaje}%0A%0A*Total: $${totalFinal.toLocaleString('es-AR')}*`;
+      window.open(`https://wa.me/5491125841686?text=${texto}`, "_blank");
+    });
+  }
 
+  // AHORA ESTÁ FUERA Y SE EJECUTARÁ SIEMPRE
   cargarProductosDesdeSheet();
 });
