@@ -14,9 +14,15 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background-color: var(--color-fondo);
   color: var(--color-texto);
+  padding-top: 220px; 
 }
 
 header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
   background-color: var(--color-principal);
   color: var(--color-blanco);
   padding: 1rem;
@@ -24,6 +30,7 @@ header {
   justify-content: space-between;
   align-items: center;
   box-shadow: var(--sombra);
+  z-index: 1100;
 }
 
 .logo {
@@ -47,8 +54,15 @@ header {
 }
 
 nav {
+  position: fixed;
+  top: 152px;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
   background-color: var(--color-beige);
   padding: 0.5rem 1rem;
+  z-index: 1050;
+  box-shadow: var(--sombra);
 }
 
 nav ul {
@@ -201,10 +215,18 @@ nav li:hover {
 }
 
 @media (max-width: 600px) {
+  body {
+    padding-top: 260px;
+  }
+  
   header {
     flex-direction: column;
-    padding: 15px;
-    gap: 15px;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  nav {
+    top: 175px;
   }
 
   .logo-container {
