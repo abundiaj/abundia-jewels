@@ -66,29 +66,60 @@ function renderProductos() {
 }
 
 function agregarAlCarrito(prod) {
-  carrito.push(prod);
+  const existe = carrito.find(item => item.nombre === prod.nombre);
+
+  if (existe) {
+    existe.cantidad += 1;
+  } else {
+    carrito.push({ ...prod, cantidad: 1 });
+  }
+ 
   actualizarCarrito();
+  
+  document.getElementById("cart").classList.add("visible");
 }
 
 function actualizarCarrito() {
   cartItems.innerHTML = "";
   let total = 0;
+
   carrito.forEach((item, index) => {
     const li = document.createElement("li");
+    li.style.display = "flex";
+    li.style.alignItems = "center";
+    li.style.marginBottom = "10px";
+    
+    // Calculamos el subtotal de este ítem
+    const subtotal = item.precio * item.cantidad;
+    total += subtotal;
+
     li.innerHTML = `
-      <img src="${item.imagen}" alt="${item.nombre}" />
-      <span>${item.nombre} - $${item.precio.toLocaleString('es-AR')}</span>
-      <button style="margin-left:auto;" onclick="eliminarDelCarrito(${index})">❌</button>
+      <img src="${item.imagen}" alt="${item.nombre}" style="width:40px; height:40px; object-fit:cover; border-radius:5px; margin-right:10px;">
+      <div style="flex-grow:1;">
+        <div style="font-weight:bold; font-size:0.9rem;">${item.nombre}</div>
+        <div style="font-size:0.8rem; color:#666;">
+          ${item.cantidad} x $${item.precio.toLocaleString('es-AR')} = **$${subtotal.toLocaleString('es-AR')}**
+        </div>
+      </div>
+      <button onclick="eliminarDelCarrito(${index})" style="background:none; border:none; color:red; cursor:pointer; font-size:1.2rem; margin-left:10px;">🗑️</button>
     `;
     cartItems.appendChild(li);
-    total += item.precio;
   });
-  if(cartCount) cartCount.textContent = carrito.length;
+
+  // Actualizamos el contador total de ítems (sumando las cantidades)
+  const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  if(cartCount) cartCount.textContent = totalItems;
   if(cartTotal) cartTotal.textContent = total.toLocaleString('es-AR');
 }
 
 window.eliminarDelCarrito = function(index) {
-  carrito.splice(index, 1);
+  if (carrito[index].cantidad > 1) {
+    // Si hay más de uno, restamos uno
+    carrito[index].cantidad -= 1;
+  } else {
+    // Si hay solo uno, eliminamos el producto del array
+    carrito.splice(index, 1);
+  }
   actualizarCarrito();
 };
 
@@ -111,13 +142,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if(whatsappBtn) {
     whatsappBtn.addEventListener("click", () => {
-      if (carrito.length === 0) return alert("El carrito está vacío.");
-      const mensaje = carrito.map((item, i) => `${i + 1}. ${item.nombre} - $${item.precio}`).join('%0A');
-      const total = carrito.reduce((sum, item) => sum + item.precio, 0);
-      const texto = `Hola! Quiero hacer un pedido a Abundia:%0A${mensaje}%0A%0ATotal: $${total}`;
-      window.open(`https://wa.me/5491125841686?text=${texto}`, "_blank");
-    });
-  }
+  if (carrito.length === 0) return alert("El carrito está vacío.");
+  
+  const mensaje = carrito.map(item => `- ${item.nombre} (x${item.cantidad}) - Subtotal: $${(item.precio * item.cantidad).toLocaleString('es-AR')}`).join('%0A');
+  const totalFinal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+  
+  const texto = `Hola Abundia! Quiero hacer un pedido:%0A${mensaje}%0A%0A*Total: $${totalFinal.toLocaleString('es-AR')}*`;
+  window.open(`https://wa.me/5491125841686?text=${texto}`, "_blank");
+});
 
   cargarProductosDesdeSheet();
 });
