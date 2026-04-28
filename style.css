@@ -217,6 +217,23 @@ nav li:hover {
   font-size: 1rem;
 }
 
+.cantidad-badge {
+  position: absolute;
+  right: -25px; /* Lo ubica a la derecha del botón */
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: bold;
+  color: var(--color-dorado);
+  font-size: 1rem;
+  animation: pop 0.3s ease; /* Efecto visual al sumar */
+}
+
+@keyframes pop {
+  0% { transform: translateY(-50%) scale(1); }
+  50% { transform: translateY(-50%) scale(1.4); }
+  100% { transform: translateY(-50%) scale(1); }
+}
+
 @media (max-width: 600px) {
   body {
     padding-top: 280px; /* Ajustamos para que no se tape el primer producto */
