@@ -160,7 +160,52 @@ document.addEventListener("DOMContentLoaded", () => {
       window.scrollTo({ top: 0, behavior: 'smooth' }); 
       renderProductos();
     });
+
+    const searchInput = document.getElementById("product-search");
+
+if (searchInput) {
+  searchInput.addEventListener("input", (e) => {
+    const term = e.target.value.toLowerCase();
+    
+    // Filtramos los productos que coincidan con el nombre
+    const filtrados = productos.filter(p => 
+      p.nombre.toLowerCase().includes(term)
+    );
+
+    // Mostramos los resultados
+    renderProductosFiltrados(filtrados);
   });
+}
+
+// Nueva función para mostrar resultados de búsqueda
+function renderProductosFiltrados(lista) {
+  if (!productList) return;
+  productList.innerHTML = "";
+
+  if (lista.length === 0) {
+    productList.innerHTML = `<p style="text-align:center; grid-column: 1/-1;">No encontramos productos que coincidan.</p>`;
+    return;
+  }
+
+  lista.forEach((prod) => {
+    const enCarrito = carrito.find(item => item.nombre === prod.nombre);
+    const cantidadTexto = enCarrito ? `<span class="cantidad-badge">x${enCarrito.cantidad}</span>` : "";
+
+    const div = document.createElement("div");
+    div.className = "product";
+    div.innerHTML = `
+      <img src="${prod.imagen}" alt="${prod.nombre}" />
+      <h3>${prod.nombre}</h3>
+      <p>$${prod.precio.toLocaleString('es-AR')}</p>
+      <div class="button-container" style="position: relative; display: inline-block;">
+        <button class="add-btn">Agregar al carrito</button>
+        ${cantidadTexto} 
+      </div>
+    `;
+    div.querySelector("button").addEventListener("click", () => agregarAlCarrito(prod));
+    productList.appendChild(div);
+  });
+}
 
   if(whatsappBtn) {
     whatsappBtn.addEventListener("click", () => {
