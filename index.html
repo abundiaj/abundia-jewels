@@ -9,12 +9,13 @@
 </head>
 <body>
 
-  <!-- Buscador arriba de todo -->
+  <!-- 1. Buscador fijo arriba de todo -->
   <div class="search-container">
     <input type="text" id="product-search" placeholder="Buscar en Abundia...">
     <span class="search-icon">🔍</span>
   </div>
 
+  <!-- 2. Header con Logo y Carrito -->
   <header>
     <div class="logo-container">
       <img src="img/logo-abundia.png" alt="Logo Abundia" class="header-logo">
@@ -23,6 +24,7 @@
     <button id="toggle-cart" class="toggle-cart-button">👜 Ver/ocultar carrito</button>
   </header>
   
+  <!-- 3. Navegación por categorías -->
   <nav>
     <ul id="categories">
       <li data-category="cocina">Cocina</li>
@@ -34,15 +36,16 @@
     </ul>
   </nav>
 
+  <!-- 4. Contenedor de Productos -->
   <main id="product-list"></main>
 
+  <!-- 5. Carrito Lateral -->
   <div id="cart">
     <button id="toggle-cart-inside" class="toggle-cart-button" style="float: right;">❌</button>
     <h2>Carrito (<span id="cart-count">0</span>)</h2>
     <ul id="cart-items"></ul>
     <p><strong>Total: $<span id="cart-total">0</span></strong></p>
-    <!-- He corregido el número de WhatsApp según lo que configuramos antes -->
-    <button id="whatsapp-btn" data-whatsapp="5491125841686">Finalizar pedido por WhatsApp</button>
+    <button id="whatsapp-btn">Finalizar pedido por WhatsApp</button>
   </div>
 
 </body>
