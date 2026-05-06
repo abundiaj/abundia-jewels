@@ -38,26 +38,21 @@ async function cargarProductosDesdeSheet() {
 
 function renderProductos() {
   if (!productList) return;
-  productList.innerHTML = "";
   const filtrados = productos.filter(p => 
     p.categoria && p.categoria === categoriaActual.toLowerCase()
   );
+  renderLista(filtrados);
+}
 
-  function renderProductos() {
-  if (!productList) return;
+// Función unificada para mostrar productos (normal o por búsqueda)
+function renderLista(lista) {
   productList.innerHTML = "";
-  
-  const filtrados = productos.filter(p => 
-    p.categoria && p.categoria === categoriaActual.toLowerCase()
-  );
-
-  if (filtrados.length === 0) {
-    productList.innerHTML = `<p style="text-align:center; grid-column: 1/-1;">Próximamente más productos en ${categoriaActual}...</p>`;
+  if (lista.length === 0) {
+    productList.innerHTML = `<p style="text-align:center; grid-column: 1/-1;">No hay productos para mostrar.</p>`;
     return;
   }
 
-  filtrados.forEach((prod) => {
-    // BUSCAMOS SI EL PRODUCTO YA ESTÁ EN EL CARRITO
+  lista.forEach((prod) => {
     const enCarrito = carrito.find(item => item.nombre === prod.nombre);
     const cantidadTexto = enCarrito ? `<span class="cantidad-badge">x${enCarrito.cantidad}</span>` : "";
 
@@ -72,23 +67,7 @@ function renderProductos() {
         ${cantidadTexto} 
       </div>
     `;
-    const button = div.querySelector("button");
-    button.addEventListener("click", () => agregarAlCarrito(prod));
-    productList.appendChild(div);
-  });
-}
-
-  filtrados.forEach((prod) => {
-    const div = document.createElement("div");
-    div.className = "product";
-    div.innerHTML = `
-      <img src="${prod.imagen}" alt="${prod.nombre}" />
-      <h3>${prod.nombre}</h3>
-      <p>$${prod.precio.toLocaleString('es-AR')}</p>
-      <button class="add-btn">Agregar al carrito</button>
-    `;
-    const button = div.querySelector("button");
-    button.addEventListener("click", () => agregarAlCarrito(prod));
+    div.querySelector("button").addEventListener("click", () => agregarAlCarrito(prod));
     productList.appendChild(div);
   });
 }
@@ -135,6 +114,7 @@ function actualizarCarrito() {
   if(cartCount) cartCount.textContent = totalItems;
   if(cartTotal) cartTotal.textContent = total.toLocaleString('es-AR');
 
+  // Esto actualiza los x1, x2 en las tarjetas
   renderProductos();
 }
 
@@ -150,63 +130,31 @@ window.eliminarDelCarrito = function(index) {
 document.addEventListener("DOMContentLoaded", () => {
   const toggleOutside = document.getElementById("toggle-cart");
   const toggleInside = document.getElementById("toggle-cart-inside");
+  const searchInput = document.getElementById("product-search");
 
   if (toggleOutside) toggleOutside.addEventListener("click", () => cart.classList.toggle("visible"));
   if (toggleInside) toggleInside.addEventListener("click", () => cart.classList.toggle("visible"));
 
+  // Evento para Categorías
   document.querySelectorAll("#categories li").forEach(li => {
     li.addEventListener("click", () => {
       categoriaActual = li.dataset.category;
+      if (searchInput) searchInput.value = ""; // Limpia buscador al cambiar categoría
       window.scrollTo({ top: 0, behavior: 'smooth' }); 
       renderProductos();
     });
-
-    const searchInput = document.getElementById("product-search");
-
-if (searchInput) {
-  searchInput.addEventListener("input", (e) => {
-    const term = e.target.value.toLowerCase();
-    
-    // Filtramos los productos que coincidan con el nombre
-    const filtrados = productos.filter(p => 
-      p.nombre.toLowerCase().includes(term)
-    );
-
-    // Mostramos los resultados
-    renderProductosFiltrados(filtrados);
   });
-}
 
-// Nueva función para mostrar resultados de búsqueda
-function renderProductosFiltrados(lista) {
-  if (!productList) return;
-  productList.innerHTML = "";
-
-  if (lista.length === 0) {
-    productList.innerHTML = `<p style="text-align:center; grid-column: 1/-1;">No encontramos productos que coincidan.</p>`;
-    return;
+  // Evento para Buscador
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      const term = e.target.value.toLowerCase();
+      const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(term));
+      renderLista(filtrados);
+    });
   }
 
-  lista.forEach((prod) => {
-    const enCarrito = carrito.find(item => item.nombre === prod.nombre);
-    const cantidadTexto = enCarrito ? `<span class="cantidad-badge">x${enCarrito.cantidad}</span>` : "";
-
-    const div = document.createElement("div");
-    div.className = "product";
-    div.innerHTML = `
-      <img src="${prod.imagen}" alt="${prod.nombre}" />
-      <h3>${prod.nombre}</h3>
-      <p>$${prod.precio.toLocaleString('es-AR')}</p>
-      <div class="button-container" style="position: relative; display: inline-block;">
-        <button class="add-btn">Agregar al carrito</button>
-        ${cantidadTexto} 
-      </div>
-    `;
-    div.querySelector("button").addEventListener("click", () => agregarAlCarrito(prod));
-    productList.appendChild(div);
-  });
-}
-
+  // Evento para WhatsApp
   if(whatsappBtn) {
     whatsappBtn.addEventListener("click", () => {
       if (carrito.length === 0) return alert("El carrito está vacío.");
@@ -217,6 +165,5 @@ function renderProductosFiltrados(lista) {
     });
   }
 
-  // AHORA ESTÁ FUERA Y SE EJECUTARÁ SIEMPRE
   cargarProductosDesdeSheet();
 });
