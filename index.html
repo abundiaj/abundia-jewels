@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,18 +8,20 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <header>
-  <div class="logo-container">
-    <img src="img/logo-abundia.png" alt="Logo Abundia" class="header-logo">
-    <span class="logo">Abundia</span>
-  </div>
-  <button id="toggle-cart" class="toggle-cart-button">👜 Ver/ocultar carrito</button>
-</header>
 
-<div class="search-container">
-  <input type="text" id="product-search" placeholder="Buscar productos...">
-  <span class="search-icon">🔍</span>
-</div>
+  <!-- Buscador arriba de todo -->
+  <div class="search-container">
+    <input type="text" id="product-search" placeholder="Buscar en Abundia...">
+    <span class="search-icon">🔍</span>
+  </div>
+
+  <header>
+    <div class="logo-container">
+      <img src="img/logo-abundia.png" alt="Logo Abundia" class="header-logo">
+      <span class="logo">Abundia</span>
+    </div>
+    <button id="toggle-cart" class="toggle-cart-button">👜 Ver/ocultar carrito</button>
+  </header>
   
   <nav>
     <ul id="categories">
@@ -40,8 +41,9 @@
     <h2>Carrito (<span id="cart-count">0</span>)</h2>
     <ul id="cart-items"></ul>
     <p><strong>Total: $<span id="cart-total">0</span></strong></p>
-    <button id="whatsapp-btn" data-whatsapp="54925841686">Finalizar pedido por WhatsApp</button>
+    <!-- He corregido el número de WhatsApp según lo que configuramos antes -->
+    <button id="whatsapp-btn" data-whatsapp="5491125841686">Finalizar pedido por WhatsApp</button>
   </div>
+
 </body>
 </html>
- 
