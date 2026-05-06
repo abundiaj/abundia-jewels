@@ -49,6 +49,36 @@ header {
   display: block;
 }
 
+.search-container {
+  position: relative;
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+#product-search {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+#product-search:focus {
+  border-color: var(--color-dorado); /* Usa tu color de marca */
+}
+
+.search-icon {
+  position: absolute;
+  right: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
+}
+
 nav {
   position: fixed;
   top: 152px;
