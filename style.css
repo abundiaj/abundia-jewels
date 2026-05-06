@@ -1,4 +1,3 @@
-
 :root {
   --color-fondo: #fff8f5;
   --color-beige: #f5e9dc;
@@ -7,33 +6,69 @@
   --color-texto: #333;
   --color-blanco: #ffffff;
   --sombra: 0 2px 6px rgba(0,0,0,0.1);
+  --alto-buscador: 35px; /* Altura compacta para la lupita */
 }
 
 body {
-  padding-top: 230px;
+  padding-top: 240px; /* Espacio para Buscador + Header + Nav */
+  margin: 0;
+  background-color: var(--color-fondo);
+  font-family: sans-serif;
 }
 
-header {
+/* --- 1. BUSCADOR (ARRIBA DE TODO) --- */
+.search-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 152px;
+  height: var(--alto-buscador);
+  background-color: var(--color-blanco);
+  z-index: 4000; /* El nivel más alto */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+#product-search {
+  width: 80%;
+  max-width: 220px; /* Tamaño pequeño */
+  padding: 4px 30px 4px 12px;
+  border: 1px solid #eee;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  outline: none;
+  transition: all 0.3s;
+}
+
+#product-search:focus {
+  border-color: var(--color-dorado);
+  width: 250px; /* Se expande un poquito al escribir */
+}
+
+.search-icon {
+  position: absolute;
+  right: calc(50% - 100px); /* Ajustado al ancho del input */
+  font-size: 0.8rem;
+  color: #aaa;
+  pointer-events: none;
+}
+
+/* --- 2. HEADER --- */
+header {
+  position: fixed;
+  top: var(--alto-buscador); /* Comienza donde termina el buscador */
+  left: 0;
+  width: 100%;
+  height: 140px;
   background-color: var(--color-principal);
-  z-index: 2000;
-  margin: 0;
+  z-index: 3000;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
   box-sizing: border-box;
-}
-
-.logo {
-  display: block;
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: var(--color-dorado);
 }
 
 .logo-container {
@@ -43,80 +78,58 @@ header {
 }
 
 .header-logo {
-  height: 120px;
+  height: 100px;
   width: auto;
-  margin-right: 0;
-  display: block;
 }
 
-.search-container {
-  position: relative;
-  max-width: 400px;
-  margin: 20px auto;
-  padding: 0 15px;
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--color-dorado);
 }
 
-#product-search {
-  width: 100%;
-  padding: 10px 40px 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 25px;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.3s;
-}
-
-#product-search:focus {
-  border-color: var(--color-dorado); /* Usa tu color de marca */
-}
-
-.search-icon {
-  position: absolute;
-  right: 25px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #888;
-  pointer-events: none;
-}
-
+/* --- 3. NAVEGACIÓN --- */
 nav {
   position: fixed;
-  top: 152px;
+  top: calc(var(--alto-buscador) + 140px); /* Buscador + Header */
   left: 0;
   width: 100%;
   background-color: var(--color-beige);
-  z-index: 1900;
-  margin: 0;
-  padding: 10px 0;
+  z-index: 2000;
+  padding: 8px 0;
   box-shadow: var(--sombra);
 }
 
 nav ul {
   list-style: none;
   display: flex;
-  gap: 1rem;
-  padding: 0;
+  gap: 0.8rem;
+  padding: 0 10px;
   margin: 0;
   overflow-x: auto;
+  justify-content: center;
 }
 
 nav li {
+  white-space: nowrap;
   cursor: pointer;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.9rem;
   border-radius: 20px;
-  background-color: var(--color-fondo);
-  transition: background-color 0.3s ease;
+  background-color: var(--color-blanco);
+  font-size: 0.9rem;
+  transition: 0.3s;
 }
 
 nav li:hover {
-  background-color: var(--color-principal);
+  background-color: var(--color-dorado);
   color: white;
 }
 
+/* --- 4. PRODUCTOS --- */
 #product-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
   padding: 1rem;
 }
 
@@ -128,191 +141,60 @@ nav li:hover {
   text-align: center;
 }
 
-.product img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 12px;
-}
-
 .product h3 {
-  white-space: pre-wrap; /* Esta es la propiedad mágica */
-  text-align: center;
-  line-height: 1.5;
-  margin: 10px 0;
-  font-size: 1.1rem;
-}
-
-.product p {
-  margin: 0.3rem 0;
+  font-size: 1rem;
+  margin: 8px 0;
 }
 
 .product button {
-  margin-top: 0.5rem;
-  padding: 0.4rem 1rem;
-  background-color: var(--color-fondo);
-  color: var(--color-dorado);
-  border: 1px solid var(--color-dorado);
+  position: relative; /* Para que el badge se ubique bien */
+  padding: 0.5rem 1rem;
   border-radius: 20px;
+  border: 1px solid var(--color-dorado);
+  background: none;
+  color: var(--color-dorado);
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-.product button:hover {
-  background-color: var(--color-principal);
-  color: white;
-}
-
+/* --- 5. CARRITO --- */
 #cart {
   position: fixed;
   right: 0;
   top: 0;
   width: 320px;
-  max-width: 100%;
   height: 100vh;
-  background: var(--color-beige);
-  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-  padding: 20px;
-  box-sizing: border-box;
-  overflow-y: auto;
+  background: white;
+  z-index: 5000; /* Por encima de la lupa */
   transform: translateX(100%);
-  transition: transform 0.3s ease;
-  z-index: 3000;
+  transition: 0.3s;
+  padding: 20px;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.1);
 }
 
-#cart.visible {
-  transform: translateX(0);
-}
+#cart.visible { transform: translateX(0); }
 
-#cart h2 {
-  margin-top: 0;
-}
-
-#cart-items {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1rem;
-}
-
-#cart-items li {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  gap: 0.5rem;
-}
-
-#cart-items img {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 6px;
-}
-
-#cart-items button {
-  background: none;
-  border: none;
-  color: #a00;
-  cursor: pointer;
-  font-size: 1.1rem;
-}
-
-#cart-items li span {
-  white-space: pre-line;
-  font-size: 0.9rem;
-}
-
-#whatsapp-btn {
-  background-color: var(--color-fondo);
-  color: var(--color-dorado);
-  border: 1px solid var(--color-dorado);
-  padding: 0.5rem 1rem;
-  width: 100%;
-  font-size: 1rem;
-  border-radius: 24px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#whatsapp-btn:hover {
-  background-color: var(--color-principal);
-  color: white;
-}
-
-#toggle-cart {
-  background: none;
-  border: none;
-  color: var(--color-dorado);
-  font-weight: bold;
-  cursor: pointer;
-  margin-left: auto;
-  font-size: 1rem;
-}
-
-.cantidad-badge {
-  position: absolute;
-  right: -25px; /* Lo ubica a la derecha del botón */
-  top: 50%;
-  transform: translateY(-50%);
-  font-weight: bold;
-  color: var(--color-dorado);
-  font-size: 1rem;
-  animation: pop 0.3s ease; /* Efecto visual al sumar */
-}
-
-@keyframes pop {
-  0% { transform: translateY(-50%) scale(1); }
-  50% { transform: translateY(-50%) scale(1.4); }
-  100% { transform: translateY(-50%) scale(1); }
-}
-
+/* --- 6. ADAPTACIÓN MÓVIL --- */
 @media (max-width: 600px) {
-  body {
-    padding-top: 280px; /* Ajustamos para que no se tape el primer producto */
-  }
-  
+  :root { --alto-buscador: 30px; }
+
   header {
-    height: 170px; /* Un poco más alto para el logo en móvil */
+    height: 130px;
     flex-direction: column;
-    padding: 10px;
     justify-content: center;
+    gap: 5px;
   }
 
-  nav {
-    top: 170px; /* Sigue al nuevo alto del header móvil */
-  }
+  .header-logo { height: 70px; }
+  .logo { font-size: 1.5rem; }
 
-  .logo-container {
-    width: 100%;
-    justify-content: center;
-    gap: 0px;
-  }
-
-  .header-logo {
-    height: 80px;
-    margin-right: -10px;
-  }
-
-  .logo {
-    font-size: 2rem;
-    margin-left: 0; 
-  }
+  nav { top: 160px; }
+  
+  body { padding-top: 240px; }
 
   #toggle-cart {
-    margin-left: 0;
-    width: 100%;
-    text-align: center;
-    padding: 10px;
-    background-color: var(--color-blanco);
-    border-radius: 20px;
-    box-shadow: var(--sombra);
-  }
-
-  nav ul {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-
-  #cart {
-    width: 100%;
+    font-size: 0.8rem;
+    padding: 5px 15px;
+    background: var(--color-blanco);
+    border-radius: 15px;
   }
 }
