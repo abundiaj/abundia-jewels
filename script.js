@@ -37,90 +37,72 @@ async function cargarProductosDesdeSheet() {
 }
 
 function renderProductos() {
-  if (!productList) return;
-  const filtrados = productos.filter(p => 
-    p.categoria && p.categoria === categoriaActual.toLowerCase()
-  );
+  const filtrados = productos.filter(p => p.categoria === categoriaActual.toLowerCase());
   renderLista(filtrados);
 }
 
-// Función unificada para mostrar productos (normal o por búsqueda)
 function renderLista(lista) {
+  if (!productList) return;
   productList.innerHTML = "";
+
   if (lista.length === 0) {
-    productList.innerHTML = `<p style="text-align:center; grid-column: 1/-1;">No hay productos para mostrar.</p>`;
+    productList.innerHTML = `<p style="grid-column: 1/-1; text-align:center;">No se encontraron productos.</p>`;
     return;
   }
 
-  lista.forEach((prod) => {
+  lista.forEach(prod => {
     const enCarrito = carrito.find(item => item.nombre === prod.nombre);
-    const cantidadTexto = enCarrito ? `<span class="cantidad-badge">x${enCarrito.cantidad}</span>` : "";
+    const badge = enCarrito ? `<span class="cantidad-badge">${enCarrito.cantidad}</span>` : "";
 
     const div = document.createElement("div");
     div.className = "product";
     div.innerHTML = `
-      <img src="${prod.imagen}" alt="${prod.nombre}" />
+      <img src="${prod.imagen}" alt="${prod.nombre}">
       <h3>${prod.nombre}</h3>
-      <p>$${prod.precio.toLocaleString('es-AR')}</p>
-      <div class="button-container" style="position: relative; display: inline-block;">
-        <button class="add-btn">Agregar al carrito</button>
-        ${cantidadTexto} 
-      </div>
+      <p><strong>$${prod.precio.toLocaleString('es-AR')}</strong></p>
+      <button onclick='agregarAlCarrito(${JSON.stringify(prod)})'>
+        Agregar al carrito ${badge}
+      </button>
     `;
-    div.querySelector("button").addEventListener("click", () => agregarAlCarrito(prod));
     productList.appendChild(div);
   });
 }
 
-function agregarAlCarrito(prod) {
+window.agregarAlCarrito = function(prod) {
   const existe = carrito.find(item => item.nombre === prod.nombre);
   if (existe) {
-    existe.cantidad += 1;
+    existe.cantidad++;
   } else {
     carrito.push({ ...prod, cantidad: 1 });
   }
   actualizarCarrito();
-  if (cart) cart.classList.add("visible");
-}
+  cart.classList.add("visible");
+};
 
 function actualizarCarrito() {
-  if (!cartItems) return;
   cartItems.innerHTML = "";
   let total = 0;
 
   carrito.forEach((item, index) => {
-    const li = document.createElement("li");
-    li.style.display = "flex";
-    li.style.alignItems = "center";
-    li.style.marginBottom = "10px";
-    
     const subtotal = item.precio * item.cantidad;
     total += subtotal;
-
+    const li = document.createElement("li");
     li.innerHTML = `
-      <img src="${item.imagen}" alt="${item.nombre}" style="width:40px; height:40px; object-fit:cover; border-radius:5px; margin-right:10px;">
-      <div style="flex-grow:1;">
-        <div style="font-weight:bold; font-size:0.9rem;">${item.nombre}</div>
-        <div style="font-size:0.8rem; color:#666;">
-          ${item.cantidad} x $${item.precio.toLocaleString('es-AR')} = $${subtotal.toLocaleString('es-AR')}
-        </div>
-      </div>
-      <button onclick="eliminarDelCarrito(${index})" style="background:none; border:none; color:red; cursor:pointer; font-size:1.2rem; margin-left:10px;">🗑️</button>
+      <img src="${item.imagen}" style="width:40px; height:40px; object-fit:cover;">
+      <div style="flex-grow:1; font-size:0.8rem;">${item.nombre} (x${item.cantidad})</div>
+      <button onclick="eliminarDelCarrito(${index})">🗑️</button>
     `;
     cartItems.appendChild(li);
   });
 
-  const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-  if(cartCount) cartCount.textContent = totalItems;
-  if(cartTotal) cartTotal.textContent = total.toLocaleString('es-AR');
-
-  // Esto actualiza los x1, x2 en las tarjetas
+  cartCount.textContent = carrito.reduce((s, i) => s + i.cantidad, 0);
+  cartTotal.textContent = total.toLocaleString('es-AR');
   renderProductos();
 }
 
 window.eliminarDelCarrito = function(index) {
   if (carrito[index].cantidad > 1) {
-    carrito[index].cantidad -= 1;
+    carrito[index].cantidad--;
   } else {
     carrito.splice(index, 1);
   }
@@ -128,42 +110,37 @@ window.eliminarDelCarrito = function(index) {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  const toggleOutside = document.getElementById("toggle-cart");
-  const toggleInside = document.getElementById("toggle-cart-inside");
   const searchInput = document.getElementById("product-search");
 
-  if (toggleOutside) toggleOutside.addEventListener("click", () => cart.classList.toggle("visible"));
-  if (toggleInside) toggleInside.addEventListener("click", () => cart.classList.toggle("visible"));
+  // Buscador
+  searchInput.addEventListener("input", (e) => {
+    const term = e.target.value.toLowerCase();
+    const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(term));
+    renderLista(filtrados);
+  });
 
-  // Evento para Categorías
+  // Categorías
   document.querySelectorAll("#categories li").forEach(li => {
     li.addEventListener("click", () => {
       categoriaActual = li.dataset.category;
-      if (searchInput) searchInput.value = ""; // Limpia buscador al cambiar categoría
-      window.scrollTo({ top: 0, behavior: 'smooth' }); 
+      searchInput.value = "";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       renderProductos();
     });
   });
 
-  // Evento para Buscador
-  if (searchInput) {
-    searchInput.addEventListener("input", (e) => {
-      const term = e.target.value.toLowerCase();
-      const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(term));
-      renderLista(filtrados);
-    });
-  }
+  // Botones Carrito
+  document.getElementById("toggle-cart").onclick = () => cart.classList.toggle("visible");
+  document.getElementById("toggle-cart-inside").onclick = () => cart.classList.toggle("visible");
 
-  // Evento para WhatsApp
-  if(whatsappBtn) {
-    whatsappBtn.addEventListener("click", () => {
-      if (carrito.length === 0) return alert("El carrito está vacío.");
-      const mensaje = carrito.map(item => `- ${item.nombre} (x${item.cantidad})`).join('%0A');
-      const totalFinal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-      const texto = `Hola Abundia! Quiero hacer un pedido:%0A${mensaje}%0A%0A*Total: $${totalFinal.toLocaleString('es-AR')}*`;
-      window.open(`https://wa.me/5491125841686?text=${texto}`, "_blank");
-    });
-  }
+  // WhatsApp
+  whatsappBtn.onclick = () => {
+    if (carrito.length === 0) return alert("Carrito vacío");
+    const msj = carrito.map(i => `- ${i.nombre} (x${i.cantidad})`).join('%0A');
+    const total = carrito.reduce((s, i) => s + (i.precio * i.cantidad), 0);
+    const link = `https://wa.me/5491125841686?text=Hola Abundia! Pedido:%0A${msj}%0ATotal: $${total.toLocaleString('es-AR')}`;
+    window.open(link, "_blank");
+  };
 
   cargarProductosDesdeSheet();
 });
